@@ -9,7 +9,7 @@
    				<h1>My Blog!</h1>
    			</div>
    			<div id="body">
-   				{{base}}
+   				%include
    			</div>
    			<div id="footer">
    				<p>Powered by MongoDB, Pymongo, and Bottle</p>
