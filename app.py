@@ -2,12 +2,13 @@ from bottle import route, run, template, get, post, request, redirect, error, st
 import pymongo
 from pymongo import MongoClient
 from subprocess import call
+
 ######## CONTENT BEING TESTED #################
 
 #the error message
 @error(404)
 def error(error):
-	return "Sorry, the page you requested was not found (404 Error)!"
+	return template("views/error.tpl")
 
 #get the CSS file
 @route('/static/<filename>')
@@ -19,12 +20,75 @@ def send_static(filename):
 #the home page 
 @route('/')
 def home():
-	return template('views/home.tpl');
+	client = MongoClient()
+	db = client.blog
+	posts = db.posts.find()
+	return template('views/home.tpl', posts=posts)
 
+#the posts page
+@route('/posts')
+def posts():
+	client = MongoClient()
+	db = client.blog
+	posts = db.posts.find()
+	return template('views/posts.tpl', posts=posts)
+
+#the about page
+@route('/about')
+def about():
+	return template('views/about.tpl')
+
+#the contact page
+@route('/contact')
+def contact():
+	return template('views/contact.tpl')
+
+#the base page
 @route('/base')
 def base():
-	return template('views/base.tpl');
+	return template('views/base.tpl')
 
+#the login page, carefully disguised to avoid hacking
+@get('/rit')
+def login():
+	return template('views/rit.tpl')
+
+#the posting page, after I have verified that I'm myself
+@route('/rit', method="post")
+def validate():
+	username = request.forms.get('username')
+	password = request.forms.get('password')
+	
+	client = MongoClient()
+	db = client.blog
+	cursor = db.login.find()
+
+	for doc in cursor:
+		if (doc["username"] == username and doc["password"] == password):
+			return template('views/input.tpl', name=username)
+
+	return "<p>Psych!  That's the wrong password!</p>"
+
+#the just-posted page, to confirm content was received
+@route('/posted', method="post")
+def posted():
+	title = request.forms.get('title')
+	print "The title is " + title
+	date = request.forms.get('date')
+	print "The date is " + date
+	content = request.forms.get('content')
+	print "The content is " + content
+
+	client = MongoClient()
+	db = client.blog
+
+	doc = {}
+	doc["title"] = title
+	doc["date"] = date
+	doc["content"] = content
+
+	db.posts.save(doc)
+	return template('views/posted.tpl')
 
 
 ###### EXAMPLES FOR LATER ####################
