@@ -15,13 +15,13 @@
 a {text-decoration:none;}
 
 .middle a:link {color:blue;}
-.middle a:hover {color:red;} /* mouse over link */
 .middle a:visited {color:blue;}
+.middle a:hover {color:#FFCC00;} /* mouse over link */
 .middle a:active {color:#FFCC00;} /* selected link */
 
 .headerLink a:link {color:white;}
-.headerLink a:hover {color:orange;}
 .headerLink a:visited {color:white;}
+.headerLink a:hover {color:orange;}
 .headerLink a:active {color:#FFCC00;}
 
 /* Div's */
