@@ -43,11 +43,6 @@ def about():
 def contact():
 	return template('views/contact.tpl')
 
-#the base page
-@route('/base')
-def base():
-	return template('views/base.tpl')
-
 #the login page, carefully disguised to avoid hacking
 @get('/rit')
 def login():
